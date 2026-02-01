@@ -6,6 +6,7 @@ const app = express();
 app.use(express.json());
 
 const dataPath = path.join(__dirname, "data.json");
+const INSECURE_MODE = process.env.INSECURE_MODE !== "false";
 
 function loadDb() {
   if (!fs.existsSync(dataPath)) {
@@ -71,6 +72,14 @@ function buildSession(user) {
   };
 }
 
+function getUserIdFromAuth(req) {
+  const header = req.headers.authorization || "";
+  if (!header.startsWith("Bearer ")) return null;
+  const token = header.replace("Bearer ", "");
+  if (!token.startsWith("access-")) return null;
+  return token.split("-")[1];
+}
+
 app.get("/", (req, res) => {
   res.json({ status: "PQCloudNotes API running" });
 });
@@ -128,6 +137,63 @@ app.post("/auth/refresh", (req, res) => {
     return res.status(401).json({ error: "invalid_refresh_token" });
   }
   return res.json(buildSession(user));
+});
+
+app.get("/notes", (req, res) => {
+  const userId = getUserIdFromAuth(req);
+  if (!userId) return res.status(401).json({ error: "unauthorized" });
+  const db = loadDb();
+  const notes = INSECURE_MODE
+    ? db.notes
+    : db.notes.filter((note) => note.ownerId === userId);
+  return res.json(notes);
+});
+
+app.get("/notes/:id", (req, res) => {
+  const userId = getUserIdFromAuth(req);
+  if (!userId) return res.status(401).json({ error: "unauthorized" });
+  const db = loadDb();
+  const note = db.notes.find((n) => n.id === req.params.id);
+  if (!note) return res.status(404).json({ error: "not_found" });
+  if (!INSECURE_MODE && note.ownerId !== userId) {
+    recordEvent(db, "idor_blocked", `user:${userId} note:${note.id}`);
+    return res.status(403).json({ error: "forbidden" });
+  }
+  return res.json(note);
+});
+
+app.post("/notes", (req, res) => {
+  const userId = getUserIdFromAuth(req);
+  if (!userId) return res.status(401).json({ error: "unauthorized" });
+  const { id, title, ciphertext, suiteId, keyVersion } = req.body || {};
+  if (!title || !ciphertext || !suiteId || !keyVersion) {
+    return res.status(400).json({ error: "missing_fields" });
+  }
+  const db = loadDb();
+  let note = db.notes.find((n) => n.id === id);
+  if (note && !INSECURE_MODE && note.ownerId !== userId) {
+    recordEvent(db, "idor_blocked", `user:${userId} note:${note.id}`);
+    return res.status(403).json({ error: "forbidden" });
+  }
+  if (!note) {
+    note = {
+      id: id || `note_${Date.now()}`,
+      ownerId: userId,
+      title,
+      ciphertext,
+      createdAt: new Date().toISOString(),
+      suiteId,
+      keyVersion
+    };
+    db.notes.unshift(note);
+  } else {
+    note.title = title;
+    note.ciphertext = ciphertext;
+    note.suiteId = suiteId;
+    note.keyVersion = keyVersion;
+  }
+  saveDb(db);
+  return res.json(note);
 });
 
 const port = process.env.PORT || 4000;
