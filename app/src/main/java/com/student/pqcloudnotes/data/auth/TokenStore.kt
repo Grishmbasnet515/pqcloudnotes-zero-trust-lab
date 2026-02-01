@@ -6,4 +6,5 @@ interface TokenStore {
     fun save(session: UserSession)
     fun load(): UserSession?
     fun clear()
+    fun storageHint(): String
 }

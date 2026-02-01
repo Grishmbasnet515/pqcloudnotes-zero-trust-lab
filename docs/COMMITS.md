@@ -16,3 +16,4 @@
 16. feat: add crypto suite selection and key rotation UI
 17. feat: add simulated device risk toggle for debug builds
 18. feat: show security events from api in settings
+19. feat: add flavor token storage (insecure vs encrypted)
