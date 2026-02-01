@@ -18,4 +18,9 @@ class SettingsViewModel : ViewModel() {
     fun rotateKeys() {
         _uiState.update { it.copy(keyVersion = it.keyVersion + 1) }
     }
+
+    fun setSimulateCompromised(enabled: Boolean) {
+        val risk = if (enabled) "HIGH" else "LOW"
+        _uiState.update { it.copy(simulateCompromised = enabled, deviceRisk = risk) }
+    }
 }

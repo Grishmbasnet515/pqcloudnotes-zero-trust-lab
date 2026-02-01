@@ -24,12 +24,14 @@ android {
             versionNameSuffix = "-insecure"
             buildConfigField("boolean", "INSECURE_MODE", "true")
             buildConfigField("boolean", "HYBRID_SUITE_LOCKED", "false")
+            buildConfigField("boolean", "ALLOW_RISK_SIMULATION", "true")
         }
         create("secure") {
             dimension = "security"
             versionNameSuffix = "-secure"
             buildConfigField("boolean", "INSECURE_MODE", "false")
             buildConfigField("boolean", "HYBRID_SUITE_LOCKED", "true")
+            buildConfigField("boolean", "ALLOW_RISK_SIMULATION", "false")
         }
     }
 

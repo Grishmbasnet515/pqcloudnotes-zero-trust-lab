@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -52,6 +53,16 @@ fun SettingsScreen(onBack: () -> Unit) {
         Text(text = "Key Version: ${state.keyVersion}")
         Text(text = "Device Risk: ${state.deviceRisk}")
         Spacer(modifier = Modifier.height(8.dp))
+        if (BuildConfig.ALLOW_RISK_SIMULATION) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Switch(
+                    checked = state.simulateCompromised,
+                    onCheckedChange = { viewModel.setSimulateCompromised(it) }
+                )
+                Text(text = "Simulate compromised device")
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+        }
         Text(text = "Select Suite:")
         Row(verticalAlignment = Alignment.CenterVertically) {
             RadioButton(
