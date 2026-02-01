@@ -22,12 +22,14 @@ import androidx.compose.ui.unit.dp
 import com.student.pqcloudnotes.BuildConfig
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.student.pqcloudnotes.data.model.CryptoSuite
+import com.student.pqcloudnotes.data.auth.TokenStoreProvider
 import com.student.pqcloudnotes.ui.viewmodel.SettingsViewModel
 
 @Composable
 fun SettingsScreen(onBack: () -> Unit) {
     val viewModel: SettingsViewModel = viewModel()
     val state by viewModel.uiState.collectAsState()
+    val tokenStoreHint = TokenStoreProvider.get().storageHint()
 
     LaunchedEffect(Unit) {
         viewModel.loadEvents()
@@ -58,6 +60,7 @@ fun SettingsScreen(onBack: () -> Unit) {
         Text(text = "Key Version: ${state.keyVersion}")
         Text(text = "Device Risk: ${state.deviceRisk}")
         Spacer(modifier = Modifier.height(8.dp))
+        Text(text = "Token Storage: $tokenStoreHint")
         if (BuildConfig.ALLOW_RISK_SIMULATION) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Switch(
