@@ -9,3 +9,4 @@
 9. feat: add fake repositories for early UI wiring
 10. feat: add basic viewmodels and wire screens to state
 11. feat: start express api with seeded json db
+12. feat: add basic auth endpoints for register/login/refresh
