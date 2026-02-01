@@ -196,6 +196,11 @@ app.post("/notes", (req, res) => {
   return res.json(note);
 });
 
+app.get("/security/events", (req, res) => {
+  const db = loadDb();
+  return res.json(db.securityEvents.slice(0, 20));
+});
+
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
   loadDb();

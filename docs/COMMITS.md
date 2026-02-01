@@ -11,3 +11,4 @@
 11. feat: start express api with seeded json db
 12. feat: add basic auth endpoints for register/login/refresh
 13. feat: add notes endpoints with insecure idor mode
+14. feat: add security events endpoint
