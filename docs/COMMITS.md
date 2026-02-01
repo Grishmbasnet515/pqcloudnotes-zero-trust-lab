@@ -15,3 +15,4 @@
 15. feat: wire app repositories to real api with token store
 16. feat: add crypto suite selection and key rotation UI
 17. feat: add simulated device risk toggle for debug builds
+18. feat: show security events from api in settings

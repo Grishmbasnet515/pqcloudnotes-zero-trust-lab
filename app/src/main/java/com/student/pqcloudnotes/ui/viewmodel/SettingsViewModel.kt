@@ -1,13 +1,18 @@
 package com.student.pqcloudnotes.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.student.pqcloudnotes.data.model.CryptoSuite
+import com.student.pqcloudnotes.data.repo.SecurityEventsRepository
+import com.student.pqcloudnotes.data.repo.impl.ApiSecurityEventsRepository
 import com.student.pqcloudnotes.ui.state.SettingsUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class SettingsViewModel : ViewModel() {
+    private val eventsRepository: SecurityEventsRepository = ApiSecurityEventsRepository()
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState: StateFlow<SettingsUiState> = _uiState
 
@@ -22,5 +27,12 @@ class SettingsViewModel : ViewModel() {
     fun setSimulateCompromised(enabled: Boolean) {
         val risk = if (enabled) "HIGH" else "LOW"
         _uiState.update { it.copy(simulateCompromised = enabled, deviceRisk = risk) }
+    }
+
+    fun loadEvents() {
+        viewModelScope.launch {
+            val events = eventsRepository.listEvents()
+            _uiState.update { it.copy(events = events) }
+        }
     }
 }

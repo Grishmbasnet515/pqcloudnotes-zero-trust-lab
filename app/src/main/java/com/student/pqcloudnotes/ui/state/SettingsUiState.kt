@@ -6,5 +6,6 @@ data class SettingsUiState(
     val suite: CryptoSuite = CryptoSuite.CLASSICAL,
     val keyVersion: Int = 1,
     val deviceRisk: String = "LOW",
-    val simulateCompromised: Boolean = false
+    val simulateCompromised: Boolean = false,
+    val events: List<com.student.pqcloudnotes.data.model.SecurityEvent> = emptyList()
 )

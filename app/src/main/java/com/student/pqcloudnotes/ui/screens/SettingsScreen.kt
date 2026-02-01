@@ -13,6 +13,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -27,6 +28,10 @@ import com.student.pqcloudnotes.ui.viewmodel.SettingsViewModel
 fun SettingsScreen(onBack: () -> Unit) {
     val viewModel: SettingsViewModel = viewModel()
     val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadEvents()
+    }
 
     Column(
         modifier = Modifier
@@ -84,6 +89,11 @@ fun SettingsScreen(onBack: () -> Unit) {
             Text("Rotate Keys")
         }
         Spacer(modifier = Modifier.height(24.dp))
+        Text(text = "Security Events (latest 20):")
+        state.events.take(5).forEach { event ->
+            Text(text = "- ${event.type}: ${event.detail}")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onBack) {
             Text("Back")
         }
