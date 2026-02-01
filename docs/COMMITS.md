@@ -13,3 +13,4 @@
 13. feat: add notes endpoints with insecure idor mode
 14. feat: add security events endpoint
 15. feat: wire app repositories to real api with token store
+16. feat: add crypto suite selection and key rotation UI

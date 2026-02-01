@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.student.pqcloudnotes.BuildConfig
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.student.pqcloudnotes.data.model.CryptoSuite
 import com.student.pqcloudnotes.ui.viewmodel.SettingsViewModel
 
 @Composable
@@ -49,6 +51,27 @@ fun SettingsScreen(onBack: () -> Unit) {
         Text(text = "Crypto Suite: ${state.suite.id}")
         Text(text = "Key Version: ${state.keyVersion}")
         Text(text = "Device Risk: ${state.deviceRisk}")
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = "Select Suite:")
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(
+                selected = state.suite == CryptoSuite.CLASSICAL,
+                onClick = { viewModel.selectSuite(CryptoSuite.CLASSICAL) }
+            )
+            Text(text = "CLASSICAL")
+        }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(
+                selected = state.suite == CryptoSuite.HYBRID_PQ_READY,
+                onClick = { viewModel.selectSuite(CryptoSuite.HYBRID_PQ_READY) },
+                enabled = !BuildConfig.HYBRID_SUITE_LOCKED
+            )
+            Text(text = "HYBRID_PQ_READY")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(onClick = { viewModel.rotateKeys() }) {
+            Text("Rotate Keys")
+        }
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = onBack) {
             Text("Back")
