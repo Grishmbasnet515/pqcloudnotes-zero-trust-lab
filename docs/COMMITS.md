@@ -8,3 +8,4 @@
 8. feat: add room note cache skeleton
 9. feat: add fake repositories for early UI wiring
 10. feat: add basic viewmodels and wire screens to state
+11. feat: start express api with seeded json db
