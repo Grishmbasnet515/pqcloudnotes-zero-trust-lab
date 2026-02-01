@@ -18,3 +18,4 @@
 18. feat: show security events from api in settings
 19. feat: add flavor token storage (insecure vs encrypted)
 20. feat: display token storage hint in settings
+21. feat: add simple crypto engine with classical and hybrid suites
