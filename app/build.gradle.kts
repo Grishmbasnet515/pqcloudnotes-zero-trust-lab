@@ -15,6 +15,23 @@ android {
         versionName = "0.1"
     }
 
+    flavorDimensions += "security"
+    productFlavors {
+        create("insecure") {
+            dimension = "security"
+            applicationIdSuffix = ".insecure"
+            versionNameSuffix = "-insecure"
+            buildConfigField("boolean", "INSECURE_MODE", "true")
+            buildConfigField("boolean", "HYBRID_SUITE_LOCKED", "false")
+        }
+        create("secure") {
+            dimension = "security"
+            versionNameSuffix = "-secure"
+            buildConfigField("boolean", "INSECURE_MODE", "false")
+            buildConfigField("boolean", "HYBRID_SUITE_LOCKED", "true")
+        }
+    }
+
     buildTypes {
         debug {
             isMinifyEnabled = false
