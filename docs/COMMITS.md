@@ -6,3 +6,4 @@
 6. feat: add notes/settings placeholder screens and settings flags
 7. feat: add api models and retrofit service scaffold
 8. feat: add room note cache skeleton
+9. feat: add fake repositories for early UI wiring
