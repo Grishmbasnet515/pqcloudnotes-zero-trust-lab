@@ -13,7 +13,9 @@ import androidx.navigation.compose.rememberNavController
 import com.student.pqcloudnotes.ui.theme.PQCloudNotesTheme
 import com.student.pqcloudnotes.ui.navigation.Route
 import com.student.pqcloudnotes.ui.screens.LoginScreen
+import com.student.pqcloudnotes.ui.screens.NotesListScreen
 import com.student.pqcloudnotes.ui.screens.PlaceholderScreen
+import com.student.pqcloudnotes.ui.screens.SettingsScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,13 +36,16 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Route.Notes.path) {
-                            PlaceholderScreen(title = "Notes List")
+                            NotesListScreen(
+                                onOpenNote = { navController.navigate(Route.NoteDetail.path) },
+                                onOpenSettings = { navController.navigate(Route.Settings.path) }
+                            )
                         }
                         composable(Route.NoteDetail.path) {
                             PlaceholderScreen(title = "Note Detail")
                         }
                         composable(Route.Settings.path) {
-                            PlaceholderScreen(title = "Settings / Security Lab")
+                            SettingsScreen(onBack = { navController.popBackStack() })
                         }
                     }
                 }
