@@ -3,7 +3,7 @@ package com.student.pqcloudnotes.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.student.pqcloudnotes.data.repo.NotesRepository
-import com.student.pqcloudnotes.data.repo.impl.FakeNotesRepository
+import com.student.pqcloudnotes.data.repo.impl.ApiNotesRepository
 import com.student.pqcloudnotes.ui.state.NotesUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class NotesViewModel(
-    private val notesRepository: NotesRepository = FakeNotesRepository()
+    private val notesRepository: NotesRepository = ApiNotesRepository()
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NotesUiState())
     val uiState: StateFlow<NotesUiState> = _uiState
