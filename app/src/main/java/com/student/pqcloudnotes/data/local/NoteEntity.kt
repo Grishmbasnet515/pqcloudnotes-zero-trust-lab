@@ -11,5 +11,6 @@ data class NoteEntity(
     val createdAt: String,
     val ownerId: String,
     val suiteId: String,
-    val keyVersion: Int
+    val keyVersion: Int,
+    val plaintextPreview: String?
 )
