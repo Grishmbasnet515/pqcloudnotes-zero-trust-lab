@@ -10,3 +10,4 @@
 - Burp: IDOR blocked (secureRelease)
 - Log: backend security events (invalid_signature, nonce_reuse, idor_blocked)
 - File system: insecure attachment path showing plaintext file
+- File system: secure attachment path showing encrypted file

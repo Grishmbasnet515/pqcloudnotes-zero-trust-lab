@@ -26,3 +26,4 @@
 26. feat: add device risk header and server-side enforcement
 27. feat: add reset and curl helper scripts
 28. docs: add README, demo script, and evidence checklist
+29. docs: expand README and demo/evidence details
