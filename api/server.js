@@ -1,12 +1,20 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 
 const app = express();
-app.use(express.json());
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf.toString();
+    }
+  })
+);
 
 const dataPath = path.join(__dirname, "data.json");
 const INSECURE_MODE = process.env.INSECURE_MODE !== "false";
+const SHARED_SECRET = "demo-shared-secret";
 
 function loadDb() {
   if (!fs.existsSync(dataPath)) {
@@ -35,11 +43,15 @@ function loadDb() {
           keyVersion: 1
         }
       ],
-      securityEvents: []
+      securityEvents: [],
+      nonceStore: {}
     };
     fs.writeFileSync(dataPath, JSON.stringify(seed, null, 2));
   }
-  return JSON.parse(fs.readFileSync(dataPath, "utf-8"));
+  const db = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
+  db.nonceStore = db.nonceStore || {};
+  db.securityEvents = db.securityEvents || [];
+  return db;
 }
 
 function saveDb(db) {
@@ -78,6 +90,61 @@ function getUserIdFromAuth(req) {
   const token = header.replace("Bearer ", "");
   if (!token.startsWith("access-")) return null;
   return token.split("-")[1];
+}
+
+function verifySignature(req, res, next) {
+  if (INSECURE_MODE) return next();
+  const userId = getUserIdFromAuth(req);
+  if (!userId) return res.status(401).json({ error: "unauthorized" });
+  const timestamp = req.header("X-Timestamp");
+  const nonce = req.header("X-Nonce");
+  const bodyHash = req.header("X-Body-Hash");
+  const signature = req.header("X-Signature");
+  if (!timestamp || !nonce || !bodyHash || !signature) {
+    return res.status(400).json({ error: "missing_signature_headers" });
+  }
+  const now = Math.floor(Date.now() / 1000);
+  const ts = parseInt(timestamp, 10);
+  if (Number.isNaN(ts) || Math.abs(now - ts) > 60) {
+    const db = loadDb();
+    recordEvent(db, "token_expired", "timestamp_skew");
+    return res.status(401).json({ error: "timestamp_expired" });
+  }
+  const rawBody = req.rawBody || "";
+  const expectedBodyHash = crypto
+    .createHash("sha256")
+    .update(rawBody)
+    .digest("base64");
+  if (expectedBodyHash !== bodyHash) {
+    const db = loadDb();
+    recordEvent(db, "invalid_signature", "body_hash_mismatch");
+    return res.status(401).json({ error: "invalid_signature" });
+  }
+  const payload =
+    req.method +
+    req.originalUrl +
+    timestamp +
+    nonce +
+    bodyHash;
+  const expectedSignature = crypto
+    .createHmac("sha256", SHARED_SECRET)
+    .update(payload)
+    .digest("base64");
+  if (expectedSignature !== signature) {
+    const db = loadDb();
+    recordEvent(db, "invalid_signature", "signature_mismatch");
+    return res.status(401).json({ error: "invalid_signature" });
+  }
+  const db = loadDb();
+  const used = db.nonceStore[userId] || [];
+  if (used.includes(nonce)) {
+    recordEvent(db, "nonce_reuse", `user:${userId}`);
+    return res.status(401).json({ error: "nonce_reuse" });
+  }
+  used.unshift(nonce);
+  db.nonceStore[userId] = used.slice(0, 100);
+  saveDb(db);
+  return next();
 }
 
 app.get("/", (req, res) => {
@@ -139,7 +206,7 @@ app.post("/auth/refresh", (req, res) => {
   return res.json(buildSession(user));
 });
 
-app.get("/notes", (req, res) => {
+app.get("/notes", verifySignature, (req, res) => {
   const userId = getUserIdFromAuth(req);
   if (!userId) return res.status(401).json({ error: "unauthorized" });
   const db = loadDb();
@@ -149,7 +216,7 @@ app.get("/notes", (req, res) => {
   return res.json(notes);
 });
 
-app.get("/notes/:id", (req, res) => {
+app.get("/notes/:id", verifySignature, (req, res) => {
   const userId = getUserIdFromAuth(req);
   if (!userId) return res.status(401).json({ error: "unauthorized" });
   const db = loadDb();
@@ -162,7 +229,7 @@ app.get("/notes/:id", (req, res) => {
   return res.json(note);
 });
 
-app.post("/notes", (req, res) => {
+app.post("/notes", verifySignature, (req, res) => {
   const userId = getUserIdFromAuth(req);
   if (!userId) return res.status(401).json({ error: "unauthorized" });
   const { id, title, ciphertext, suiteId, keyVersion } = req.body || {};
@@ -196,7 +263,7 @@ app.post("/notes", (req, res) => {
   return res.json(note);
 });
 
-app.get("/security/events", (req, res) => {
+app.get("/security/events", verifySignature, (req, res) => {
   const db = loadDb();
   return res.json(db.securityEvents.slice(0, 20));
 });
