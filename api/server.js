@@ -96,6 +96,12 @@ function verifySignature(req, res, next) {
   if (INSECURE_MODE) return next();
   const userId = getUserIdFromAuth(req);
   if (!userId) return res.status(401).json({ error: "unauthorized" });
+  const deviceRisk = req.header("X-Device-Risk") || "UNKNOWN";
+  if (deviceRisk === "HIGH") {
+    const db = loadDb();
+    recordEvent(db, "risk_denied", `user:${userId}`);
+    return res.status(403).json({ error: "risk_denied" });
+  }
   const timestamp = req.header("X-Timestamp");
   const nonce = req.header("X-Nonce");
   const bodyHash = req.header("X-Body-Hash");

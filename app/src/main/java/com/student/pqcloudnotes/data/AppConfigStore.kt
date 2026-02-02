@@ -11,11 +11,19 @@ object AppConfigStore {
     var keyVersion: Int = 1
         private set
 
+    @Volatile
+    var deviceRisk: String = "LOW"
+        private set
+
     fun updateSuite(value: CryptoSuite) {
         suite = value
     }
 
     fun incrementKeyVersion() {
         keyVersion += 1
+    }
+
+    fun updateRisk(value: String) {
+        deviceRisk = value
     }
 }

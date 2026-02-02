@@ -23,3 +23,4 @@
 23. feat: add room cache with insecure plaintext preview flag
 24. feat: add request signing (secure flavor) and api verification
 25. feat: add attachment handling with insecure vs encrypted storage
+26. feat: add device risk header and server-side enforcement

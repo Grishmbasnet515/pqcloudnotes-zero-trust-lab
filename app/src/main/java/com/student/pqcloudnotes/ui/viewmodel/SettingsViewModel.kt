@@ -29,6 +29,7 @@ class SettingsViewModel : ViewModel() {
 
     fun setSimulateCompromised(enabled: Boolean) {
         val risk = if (enabled) "HIGH" else "LOW"
+        AppConfigStore.updateRisk(risk)
         _uiState.update { it.copy(simulateCompromised = enabled, deviceRisk = risk) }
     }
 

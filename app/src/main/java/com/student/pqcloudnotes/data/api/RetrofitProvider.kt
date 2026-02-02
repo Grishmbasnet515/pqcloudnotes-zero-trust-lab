@@ -2,6 +2,7 @@ package com.student.pqcloudnotes.data.api
 
 import com.student.pqcloudnotes.data.auth.TokenStore
 import com.student.pqcloudnotes.network.SigningProvider
+import com.student.pqcloudnotes.network.RiskHeaderProvider
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -23,10 +24,12 @@ object RetrofitProvider {
             chain.proceed(request)
         }
         val signingInterceptor = SigningProvider.create()
+        val riskInterceptor = RiskHeaderProvider.create()
         val client = OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
             .apply {
                 if (signingInterceptor != null) addInterceptor(signingInterceptor)
+                if (riskInterceptor != null) addInterceptor(riskInterceptor)
             }
             .build()
         return Retrofit.Builder()
