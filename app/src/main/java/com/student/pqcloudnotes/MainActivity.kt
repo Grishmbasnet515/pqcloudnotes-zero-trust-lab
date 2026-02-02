@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.student.pqcloudnotes.ui.theme.PQCloudNotesTheme
 import com.student.pqcloudnotes.ui.navigation.Route
 import com.student.pqcloudnotes.ui.screens.LoginScreen
+import com.student.pqcloudnotes.ui.screens.NoteDetailScreen
 import com.student.pqcloudnotes.ui.screens.NotesListScreen
 import com.student.pqcloudnotes.ui.screens.PlaceholderScreen
 import com.student.pqcloudnotes.ui.screens.SettingsScreen
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Route.NoteDetail.path) {
-                            PlaceholderScreen(title = "Note Detail")
+                            NoteDetailScreen(onBack = { navController.popBackStack() })
                         }
                         composable(Route.Settings.path) {
                             SettingsScreen(onBack = { navController.popBackStack() })

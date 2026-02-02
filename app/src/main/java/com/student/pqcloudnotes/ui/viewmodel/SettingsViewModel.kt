@@ -2,6 +2,7 @@ package com.student.pqcloudnotes.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.student.pqcloudnotes.data.AppConfigStore
 import com.student.pqcloudnotes.data.model.CryptoSuite
 import com.student.pqcloudnotes.data.repo.SecurityEventsRepository
 import com.student.pqcloudnotes.data.repo.impl.ApiSecurityEventsRepository
@@ -17,10 +18,12 @@ class SettingsViewModel : ViewModel() {
     val uiState: StateFlow<SettingsUiState> = _uiState
 
     fun selectSuite(suite: CryptoSuite) {
+        AppConfigStore.updateSuite(suite)
         _uiState.update { it.copy(suite = suite) }
     }
 
     fun rotateKeys() {
+        AppConfigStore.incrementKeyVersion()
         _uiState.update { it.copy(keyVersion = it.keyVersion + 1) }
     }
 
