@@ -1,6 +1,7 @@
 package com.student.pqcloudnotes.data
 
 import com.student.pqcloudnotes.data.model.CryptoSuite
+import com.student.pqcloudnotes.security.DevicePosture
 
 object AppConfigStore {
     @Volatile
@@ -15,6 +16,10 @@ object AppConfigStore {
     var deviceRisk: String = "LOW"
         private set
 
+    @Volatile
+    var devicePosture: DevicePosture = DevicePosture()
+        private set
+
     fun updateSuite(value: CryptoSuite) {
         suite = value
     }
@@ -25,5 +30,9 @@ object AppConfigStore {
 
     fun updateRisk(value: String) {
         deviceRisk = value
+    }
+
+    fun updatePosture(posture: DevicePosture) {
+        devicePosture = posture
     }
 }

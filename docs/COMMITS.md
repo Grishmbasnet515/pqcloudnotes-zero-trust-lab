@@ -28,3 +28,4 @@
 28. docs: add README, demo script, and evidence checklist
 29. docs: expand README and demo/evidence details
 30. docs: finalize checklist and requirements summary
+31. feat: add device posture checks and display in settings

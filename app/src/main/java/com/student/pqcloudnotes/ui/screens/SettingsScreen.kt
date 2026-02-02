@@ -33,6 +33,7 @@ fun SettingsScreen(onBack: () -> Unit) {
 
     LaunchedEffect(Unit) {
         viewModel.loadEvents()
+        viewModel.refreshPosture()
     }
 
     Column(
@@ -92,6 +93,11 @@ fun SettingsScreen(onBack: () -> Unit) {
             Text("Rotate Keys")
         }
         Spacer(modifier = Modifier.height(24.dp))
+        Text(text = "Security Posture:")
+        Text(text = "Emulator: ${state.isEmulator}")
+        Text(text = "Rooted: ${state.isRooted}")
+        Text(text = "Debuggable: ${state.isDebuggable}")
+        Spacer(modifier = Modifier.height(12.dp))
         Text(text = "Security Events (latest 20):")
         state.events.take(5).forEach { event ->
             Text(text = "- ${event.type}: ${event.detail}")
