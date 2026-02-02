@@ -22,3 +22,4 @@
 22. feat: add note detail screen with encrypt and save flow
 23. feat: add room cache with insecure plaintext preview flag
 24. feat: add request signing (secure flavor) and api verification
+25. feat: add attachment handling with insecure vs encrypted storage

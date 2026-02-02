@@ -1,5 +1,8 @@
 package com.student.pqcloudnotes.ui.screens
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,8 +14,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -23,6 +28,15 @@ import com.student.pqcloudnotes.ui.viewmodel.NoteDetailViewModel
 fun NoteDetailScreen(onBack: () -> Unit) {
     val viewModel: NoteDetailViewModel = viewModel()
     val state by viewModel.uiState.collectAsState()
+    val attachmentPath = remember { mutableStateOf<String?>(null) }
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            val path = viewModel.saveAttachment(uri)
+            attachmentPath.value = path
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -57,6 +71,14 @@ fun NoteDetailScreen(onBack: () -> Unit) {
         Spacer(modifier = Modifier.height(12.dp))
         Button(onClick = { viewModel.saveNote() }) {
             Text("Save")
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+        Button(onClick = { launcher.launch("image/*") }) {
+            Text("Attach Image")
+        }
+        attachmentPath.value?.let {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = "Attachment path: $it")
         }
         state.status?.let {
             Spacer(modifier = Modifier.height(8.dp))
