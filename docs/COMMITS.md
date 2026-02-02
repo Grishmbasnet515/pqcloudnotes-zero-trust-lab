@@ -27,3 +27,4 @@
 27. feat: add reset and curl helper scripts
 28. docs: add README, demo script, and evidence checklist
 29. docs: expand README and demo/evidence details
+30. docs: finalize checklist and requirements summary
