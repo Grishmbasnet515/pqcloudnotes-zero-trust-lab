@@ -1,0 +1,12 @@
+# Evidence Checklist
+- Screenshot: Login (insecureDebug)
+- Screenshot: Notes list synced from API
+- Screenshot: Note detail showing suite_id + key_version
+- Screenshot: Settings showing device risk + token storage hint
+- Screenshot: Security events list
+- Burp: request tampering success (insecureDebug)
+- Burp: request tampering blocked (secureRelease)
+- Burp: IDOR success (insecureDebug)
+- Burp: IDOR blocked (secureRelease)
+- Log: backend security events (invalid_signature, nonce_reuse, idor_blocked)
+- File system: insecure attachment path showing plaintext file
