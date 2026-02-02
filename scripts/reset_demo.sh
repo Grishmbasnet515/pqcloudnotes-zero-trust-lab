@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+cat > "$ROOT_DIR/api/data.json" <<'JSON'
+{
+  "users": [
+    { "id": "userA", "email": "usera@demo.com", "password": "passwordA" },
+    { "id": "userB", "email": "userb@demo.com", "password": "passwordB" }
+  ],
+  "notes": [
+    {
+      "id": "noteA1",
+      "ownerId": "userA",
+      "title": "UserA Note",
+      "ciphertext": "ciphertext-userA-1",
+      "createdAt": "2026-02-01T00:00:00Z",
+      "suiteId": "CLASSICAL",
+      "keyVersion": 1
+    },
+    {
+      "id": "noteB1",
+      "ownerId": "userB",
+      "title": "UserB Note",
+      "ciphertext": "ciphertext-userB-1",
+      "createdAt": "2026-02-01T00:00:00Z",
+      "suiteId": "CLASSICAL",
+      "keyVersion": 1
+    }
+  ],
+  "securityEvents": [],
+  "nonceStore": {}
+}
+JSON
+
+echo "Reset complete: api/data.json seeded"
