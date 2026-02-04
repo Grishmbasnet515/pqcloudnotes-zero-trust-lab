@@ -57,7 +57,7 @@ See `evidence/README.md`.
 - HYBRID_PQ_READY suite uses simulated PQ secrets for demo purposes.
 - Insecure flavor intentionally includes weaknesses for student labs.
 
-## Final checklist (requirements)
+## Final checklist
 - Android Kotlin + Compose only
 - Insecure vs secure flavors with intentional vulns + fixes
 - Room cache with insecure plaintext demo vs secure ciphertext
