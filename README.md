@@ -31,9 +31,9 @@ Backend:
 3. `npm start`
 
 Android:
-1. Open project in Android Studio.
+1. Open the project in Android Studio.
 2. Use flavor `insecureDebug` or `secureRelease`.
-3. Emulator access: use `http://10.0.2.2:4000` for API base URL.
+3. Emulator access: uses `http://10.0.2.2:4000` for API base URL.
 
 Scripts:
 - `scripts/reset_demo.sh` resets JSON DB to demo users and notes.
