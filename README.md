@@ -5,7 +5,7 @@ PQCloudNotes is a student-friendly mobile + cloud security lab focused on crypto
 PQCloudNotes simulates a cloud-synced encrypted notes app that can switch crypto suites (CLASSICAL vs HYBRID_PQ_READY) and supports key rotation. It demonstrates how mobile and backend controls work together to reduce blast radius and to prepare for a post-quantum migration path.
 This repository includes intentionally vulnerable and secure build flavors for student pentesting practice.
 
-## Threat model (demo focus)
+## Threat model 
 - Request tampering and replay
 - IDOR (insecure direct object reference)
 - Weak token storage on device
